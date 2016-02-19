@@ -100,16 +100,19 @@ function wrapText (context, text, x, y, maxWidth, lineHeight) {
   var sp = text.split(/ |<br>|<\/br>/g);
   var line = [];
 
-  for (var i = 0; i < sp.length; i++) {
-    if (sp[i].length > 8 && sp[i].length < 12) {
-      line.push( sp[i].slice(0, 6) );
-      line.push( sp[i].slice(6) );
-    } else if (sp[i].length > 12) {
-      line.push( sp[i].slice(0, 8) );
-      line.push( sp[i].slice(8) );
+  if ( sp.length == 1) {
+    sp = sp[0];
+    if (sp.length > 8 && sp.length < 12) {
+      line.push( sp.slice(0, 6) );
+      line.push( sp.slice(6) );
+    } else if (sp.length > 12) {
+      line.push( sp.slice(0, sp.length/2.0) );
+      line.push( sp.slice(sp.length) );
     } else {
-      line.push( sp[i] );
+      line.push( sp );
     }
+  } else {
+    line = sp;
   }
 
   context.fillText(course_no, x, y, maxWidth);
