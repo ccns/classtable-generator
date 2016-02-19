@@ -148,6 +148,7 @@
         //   select.children("option[selected]").removeAttr("selected");
         //   select.children(":nth-child(2)").addAttr("selected");
         // }
+        console.log('在學號後面加上"/mgc"試試!');
       })(jQuery);
     </script>
 
@@ -158,11 +159,7 @@
 
         var stn_no = $("#stn_no").val();
         var sp = stn_no.split("/");
-        if ( sp.length > 1 ) {
-          stn_no = sp[0];
-          console.log(sp);
-          console.log(stn_no);
-        }
+        if ( sp.length > 1 ) stn_no = sp[0];
 
         var passwd = SHA1($("#passwd").val());
 
@@ -174,9 +171,13 @@
 
             if (canvas.getContext) {
               var ctx = canvas.getContext("2d");
-              
+
               clear( canvas, ctx);
-              if ( sp[1] == "mgc" ) rasis(ctx);
+              if ( sp[1] == "mgc" ) {
+                rasis(ctx);
+                console.log("MGC stand for Music Game Club");
+                console.log("歡迎加入成大音樂遊戲社!");
+              }
               drawTable(ctx, arr);
 
               $("#loading-gif").hide();
