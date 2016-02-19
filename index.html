@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8">
     <title>課表產生器</title>
+    <meta name="description" content="幫你產生漂亮的課表">
+    <meta name="keywords" content="成大,課程,課表">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 
     <meta property="og:url"          content="http://ccns.github.io/classtable-generator/" />
     <meta property="og:title"        content="課表產生器" />
@@ -31,11 +35,23 @@
     </script>
   </head>
   <body>
-    <nav class="grey darken-3 pinned">
-      <div class="container">
-        <h4 class="center-align">課表產生器</h4>
+    <nav class="grey darken-3 pinned" role="navigation">
+      <div class="nav-wrapper container">
+        <h4 class="brand-logo center">課表產生器</h4>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="https://github.com/ccns/classtable-generator">Github</a></li>
+          <li><a href="https://github.com/ccns/ncku-classtable-parser">Clawer</a></li>
+          <li><a href="http://web.ccns.ncku.edu.tw/">CCNS</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
       </div>
     </nav>
+
+    <ul id="nav-mobile" class="side-nav">
+      <li><a href="https://github.com/ccns/classtable-generator">Github</a></li>
+      <li><a href="https://github.com/ccns/ncku-classtable-parser">Clawer</a></li>
+      <li><a href="http://web.ccns.ncku.edu.tw/">CCNS</a></li>
+    </ul>
 
     <div class="container" id="login-field">
 
@@ -116,6 +132,10 @@
     <script type="text/javascript">
       $(document).ready(function() {
         $('select').material_select();
+        $('.button-collapse').sideNav();
+        $('.pinned').pushpin({
+          top: 0
+        });
       });
     </script>
 
