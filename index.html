@@ -134,14 +134,25 @@
         var passwd = SHA1($("#passwd").val()); //f3aebb580a5198bee795cc936e0f2c170c7fa2e5
 
         getTable(stn_no, passwd, function (arr) {
-          console.log(arr);
-          var canvas = document.getElementById("table");
-          if (canvas.getContext) {
-            var ctx = canvas.getContext("2d");
-            renderTable(ctx, arr);
+          // console.log(arr);
+          if (arr) {
+
+            var canvas = document.getElementById("table");
+
+            if (canvas.getContext) {
+              var ctx = canvas.getContext("2d");
+              clear( canvas, ctx)
+              drawTable(ctx, arr);
+              $("#loading-gif").hide();
+              $("#canvas-container").fadeIn("slow");
+              $("#hint").fadeIn("slow");
+            }
+
+          } else {
+
+            alert("帳號密碼錯誤!");
             $("#loading-gif").hide();
-            $("#canvas-container").fadeIn("slow");
-            $("#hint").fadeIn("slow");
+
           }
         });
       }
