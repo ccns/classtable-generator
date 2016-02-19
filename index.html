@@ -120,6 +120,7 @@
           <canvas id="table" width="480" height="640">
             Your browser does not support this.
           </canvas>
+          <img id="rasis" src="img/rasis.jpg" style="display:none" />
         </div>
       </div>
 
@@ -155,8 +156,15 @@
       function generate() {
         $("#loading-gif").fadeIn("slow");
 
-        var stn_no = $("#stn_no").val(); //e14026046
-        var passwd = SHA1($("#passwd").val()); //f3aebb580a5198bee795cc936e0f2c170c7fa2e5
+        var stn_no = $("#stn_no").val();
+        var sp = stn_no.split("/");
+        if ( sp.length > 1 ) {
+          stn_no = sp[0];
+          console.log(sp);
+          console.log(stn_no);
+        }
+
+        var passwd = SHA1($("#passwd").val());
 
         getTable(stn_no, passwd, function (arr) {
           // console.log(arr);
@@ -166,8 +174,11 @@
 
             if (canvas.getContext) {
               var ctx = canvas.getContext("2d");
-              clear( canvas, ctx)
+              
+              clear( canvas, ctx);
+              if ( sp[1] == "mgc" ) rasis(ctx);
               drawTable(ctx, arr);
+
               $("#loading-gif").hide();
               $("#canvas-container").fadeIn("slow");
               $("#hint").fadeIn("slow");
