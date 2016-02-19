@@ -115,7 +115,7 @@ function wrapText (context, text, x, y, maxWidth, lineHeight) {
   context.fillText(course_no, x, y, maxWidth);
   y += lineHeight;
 
-  for (var i = 0; i < line.length; i++) {
+  for (var i = 0; i < 2; i++) {
     context.fillText(line[i], x, y, maxWidth);
     y += lineHeight;
   }
