@@ -16,6 +16,15 @@ function getTable(stn_no, passwd, callback) {
   });
 }
 
+function rasis( context ) {
+  context.save();
+  {
+    context.globalAlpha = 0.3;
+    context.drawImage(document.getElementById('rasis'),0,40);
+  }
+  context.restore();
+}
+
 function drawTable( context, arr ) {
   // header bar
   context.save();
