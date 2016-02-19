@@ -95,41 +95,29 @@ function clear( canvas, context ) {
 
 function wrapText (context, text, x, y, maxWidth, lineHeight) {
 
-  text = text.slice(0,6) + " " + text.slice(6)
+  var course_no = text.slice(0, 6);
+  var text = text.slice(6);
+  var sp = text.split(/ |<br>|<\/br>/g);
+  var line = [];
 
-  var words = text.split(' '),
-      line = '',
-      lineCount = 0,
-      i,
-      test,
-      metrics;
-
-  for (i = 0; i < words.length; i++) {
-      test = words[i];
-      metrics = context.measureText(test);
-      while (metrics.width > maxWidth) {
-          // Determine how much of the word will fit
-          test = test.substring(0, test.length - 1);
-          metrics = context.measureText(test);
-      }
-      if (words[i] != test) {
-          words.splice(i + 1, 0,  words[i].substr(test.length))
-          words[i] = test;
-      }
-
-      test = line + words[i] + ' ';
-      metrics = context.measureText(test);
-
-      if (metrics.width > maxWidth && i > 0) {
-          context.fillText(line, x, y);
-          line = words[i] + ' ';
-          y += lineHeight;
-          lineCount++;
-      }
-      else {
-          line = test;
-      }
+  for (var i = 0; i < sp.length; i++) {
+    if (sp[i].length > 8 && sp[i].length < 12) {
+      line.push( sp[i].slice(0, 6) );
+      line.push( sp[i].slice(6) );
+    } else if (sp[i].length > 12) {
+      line.push( sp[i].slice(0, 8) );
+      line.push( sp[i].slice(8) );
+    } else {
+      line.push( sp[i] );
+    }
   }
 
-  context.fillText(line, x, y);
+  context.fillText(course_no, x, y, maxWidth);
+  y += lineHeight;
+
+  for (var i = 0; i < line.length; i++) {
+    context.fillText(line[i], x, y, maxWidth);
+    y += lineHeight;
+  }
+
 }
