@@ -162,8 +162,10 @@
         if ( sp.length > 1 ) stn_no = sp[0];
 
         var passwd = SHA1($("#passwd").val());
+        var room = "false";
+        if ( sp[1] == "room" ) room = "true";
 
-        getTable(stn_no, passwd, function (status, arr) {
+        getTable(stn_no, passwd, room, function (status, arr) {
           // console.log(arr);
           if (status == 0) {
 
