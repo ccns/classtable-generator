@@ -95,6 +95,13 @@
 
       <div class="row">
         <div class="center-align" id="generate-btn">
+          <input type="checkbox" class="filled-in" id="disp-room" />
+          <label for="disp-room">顯示上課教室(速度較慢)</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="center-align" id="generate-btn">
           <button class="btn waves-effect waves-light" type="button" onclick="generate();">產生課表</button>
         </div>
       </div>
@@ -163,7 +170,7 @@
 
         var passwd = SHA1($("#passwd").val());
         var room = "false";
-        if ( sp[1] == "room" ) room = "true";
+        if ( $("#disp-room").prop("checked") ) room = "true";
 
         getTable(stn_no, passwd, room, function (status, arr) {
           // console.log(arr);
