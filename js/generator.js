@@ -1,3 +1,33 @@
+(function ($) {
+
+  if (false) {
+    var ctx = document.getElementById("table").getContext("2d")
+    drawTable( ctx, [
+      [
+        "123456第一行 第二行 第三行",
+        "123456這段有六個字",
+        "123456這段是七個字喔",
+        "123456這段文字有八個字",
+        "123456這一段文字有九個字"
+      ],
+      [
+        "123456六的兩倍十二六的兩倍十二f",
+        "123456七的兩倍是十四七的兩倍是十四f",
+        "123456八個的兩倍是十六八個的兩倍是十六f",
+        "123456九的兩倍有足足十八九的兩倍有足足十八f",
+        "123456第一行很少 第二行超過八個字會怎樣呢 還有第三行喔"
+      ],
+      [
+        "123456第一行超過八個字會怎樣呢 第二行也超過八個子會怎樣呢"
+      ]
+    ]);
+    $("#loading-gif").hide();
+    $("#canvas-container").fadeIn("slow");
+    $("#hint").fadeIn("slow");
+    return;
+  }
+})(jQuery);
+
 function getTable(stn_no, passwd, callback) {
   $.ajax({
     method: "POST",
@@ -105,9 +135,9 @@ function wrapText (context, text, x, y, maxWidth, lineHeight) {
     if (sp.length > 8 && sp.length < 12) {
       line.push( sp.slice(0, 6) );
       line.push( sp.slice(6) );
-    } else if (sp.length > 12) {
-      line.push( sp.slice(0, sp.length/2.0) );
-      line.push( sp.slice(sp.length) );
+    } else if (sp.length >= 12) {
+      line.push( sp.slice(0, sp.length/2) );
+      line.push( sp.slice(sp.length/2) );
     } else {
       line.push( sp );
     }
@@ -118,7 +148,8 @@ function wrapText (context, text, x, y, maxWidth, lineHeight) {
   context.fillText(course_no, x, y, maxWidth);
   y += lineHeight;
 
-  for (var i = 0; i < line.length; i++) {
+  for (var i = 0; i < 2; i++) {
+    if ( typeof line[i] == 'undefined' ) break;
     context.fillText(line[i], x, y, maxWidth);
     y += lineHeight;
   }
