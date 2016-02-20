@@ -31,17 +31,17 @@
 function getTable(stn_no, passwd, callback) {
   $.ajax({
     method: "POST",
-    url: "https://ncku-classtable-parser.herokuapp.com/",
+    url: "http://ncku-classtable-parser.herokuapp.com/", //https://ncku-classtable-parser.herokuapp.com/
     dataType: "json",
     data: { stu_no: stn_no, passwd: passwd }
   }).done(function(data) {
     var arr = JSON.parse(data)
     if (arr.err) {
-      return callback(0);
+      return callback(-1, arr.err);
     } else {
       arr.splice(0, 2);
       arr.splice(10, 5);
-      return callback(arr);
+      return callback(0, arr);
     }
   });
 }

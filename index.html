@@ -163,9 +163,9 @@
 
         var passwd = SHA1($("#passwd").val());
 
-        getTable(stn_no, passwd, function (arr) {
+        getTable(stn_no, passwd, function (status, arr) {
           // console.log(arr);
-          if (arr) {
+          if (status == 0) {
 
             var canvas = document.getElementById("table");
 
@@ -187,7 +187,7 @@
 
           } else {
 
-            alert("帳號密碼錯誤!");
+            alert(arr);
             $("#loading-gif").hide();
 
           }
