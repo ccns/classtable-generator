@@ -28,12 +28,12 @@
   }
 })(jQuery);
 
-function getTable(stn_no, passwd, callback) {
+function getTable(stn_no, passwd, room, callback) {
   $.ajax({
     method: "POST",
     url: "https://ncku-classtable-parser.herokuapp.com/", //https://ncku-classtable-parser.herokuapp.com/
     dataType: "json",
-    data: { stu_no: stn_no, passwd: passwd }
+    data: { stu_no: stn_no, passwd: passwd, room: room }
   }).done(function(data) {
     var arr = JSON.parse(data)
     if (arr.err) {
@@ -123,10 +123,11 @@ function clear( canvas, context ) {
   context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function wrapText (context, text, x, y, maxWidth, lineHeight) {
+function wrapText (context, course, x, y, maxWidth, lineHeight) {
 
-  var course_no = text.slice(0, 6);
-  var text = text.slice(6);
+  var course_no = course.course_no;
+  var text = course.text;
+  var room = course.room;
   var sp = text.split(/ |<br>|<\/br>/g);
   var line = [];
 
@@ -145,12 +146,19 @@ function wrapText (context, text, x, y, maxWidth, lineHeight) {
     line = sp;
   }
 
-  context.fillText(course_no, x, y, maxWidth);
-  y += lineHeight;
+  if (typeof room == "undefined") {
+    context.fillText(course_no, x, y, maxWidth);
+    y += lineHeight;
+  }
 
   for (var i = 0; i < 2; i++) {
     if ( typeof line[i] == 'undefined' ) break;
     context.fillText(line[i], x, y, maxWidth);
+    y += lineHeight;
+  }
+
+  if (typeof room != "undefined") {
+    context.fillText(room, x, y, maxWidth);
     y += lineHeight;
   }
 
