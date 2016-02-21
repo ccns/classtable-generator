@@ -120,7 +120,12 @@ function drawTable( context, arr ) {
 }
 
 function clear( canvas, context ) {
-  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.save();
+  {
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  }
+  context.restore();
 }
 
 function wrapText (context, course, x, y, maxWidth, lineHeight) {
