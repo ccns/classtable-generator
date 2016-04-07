@@ -135,6 +135,7 @@
 
     <script src="js/generator.js" charset="utf-8"></script>
     <script src="js/sha1.js" charset="utf-8"></script>
+    <script src="js/sha256.js" charset="utf-8"></script>
 
     <!-- Materialize initializations -->
     <script type="text/javascript">
@@ -168,7 +169,7 @@
         var sp = stn_no.split("/");
         if ( sp.length > 1 ) stn_no = sp[0];
 
-        var passwd = SHA1($("#passwd").val());
+        var passwd = CryptoJS.SHA256($("#passwd").val()) + "";
         var room = "false";
         if ( $("#disp-room").prop("checked") ) room = "true";
 
