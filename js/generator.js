@@ -31,7 +31,8 @@
 function getTable(stn_no, passwd, room, callback) {
   $.ajax({
     method: "POST",
-    url: "https://ncku-classtable-parser.herokuapp.com/", //https://ncku-classtable-parser.herokuapp.com/
+    //url: "https://ncku-classtable-parser.herokuapp.com/", //https://ncku-classtable-parser.herokuapp.com/
+    url: "http://dcie.ddns.net:3000/",
     dataType: "json",
     data: { stu_no: stn_no, passwd: passwd, room: room }
   }).done(function(data) {
