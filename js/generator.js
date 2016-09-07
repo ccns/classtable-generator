@@ -1,4 +1,18 @@
+var url = "https://ncku-classtable-parser.herokuapp.com/";
+//var url = "http://dcie.ddns.net:3000/";
+
 (function ($) {
+
+  $.ajax({
+    method: "POST",
+    url: url,
+    dataType: "json",
+    data: { stu_no: "", passwd: "", room: false }
+  }).done(function(d) {
+    $("#status").text("●").attr('color', 'green');
+  }).fail(function(e) {
+    $("#status").text("●").attr('color', 'red');
+  });
 
   if (false) {
     var ctx = document.getElementById("table").getContext("2d")
@@ -26,13 +40,13 @@
     $("#hint").fadeIn("slow");
     return;
   }
+
 })(jQuery);
 
 function getTable(stn_no, passwd, room, callback) {
   $.ajax({
     method: "POST",
-    url: "https://ncku-classtable-parser.herokuapp.com/", //https://ncku-classtable-parser.herokuapp.com/
-    //url: "http://dcie.ddns.net:3000/",
+    url: url,
     dataType: "json",
     data: { stu_no: stn_no, passwd: passwd, room: room }
   }).done(function(data) {
