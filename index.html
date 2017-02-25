@@ -186,7 +186,11 @@
         if ( $("#remember").prop("checked") ) {
           Cookies.set("stn_no", $("#stn_no").val());
           Cookies.set("passwd", $("#passwd").val());
-          Cookies.set("remember", $("#remenber").prop("checked"));
+          Cookies.set("remember", true);
+        } else {
+          Cookies.remove("stn_no");
+          Cookies.remove("passwd");
+          Cookies.remove("remember");
         }
 
         var stn_no = $("#stn_no").val();
