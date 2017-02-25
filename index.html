@@ -172,7 +172,7 @@
         // }
         if(Cookies.get("stn_no")) $("#stn_no").val(Cookies.get("stn_no"));
         if(Cookies.get("passwd")) $("#passwd").val(Cookies.get("passwd"));
-        if(Cookies.get("remember")) $("#remenber").prop("checked", Cookies.get("remember"));
+        if(Cookies.get("remember")) $("#remember").prop("checked", Cookies.get("remember"));
         console.log('在學號後面加上"/img:url"可以為你的課表加上背景唷');
         console.log('另外也可以在學號後面加上"/mgc"試試!');
       })(jQuery);
@@ -186,7 +186,7 @@
         if ( $("#remember").prop("checked") ) {
           Cookies.set("stn_no", $("#stn_no").val());
           Cookies.set("passwd", $("#passwd").val());
-          Cookies.set("remember", 1);
+          Cookies.set("remember", true);
         } else {
           Cookies.remove("stn_no");
           Cookies.remove("passwd");
