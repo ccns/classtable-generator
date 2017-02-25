@@ -163,7 +163,8 @@
         //   select.children("option[selected]").removeAttr("selected");
         //   select.children(":nth-child(2)").addAttr("selected");
         // }
-        console.log('在學號後面加上"/mgc"試試!');
+        console.log('在學號後面加上"/img:url"可以為你的課表加上背景唷');
+        console.log('另外也可以在學號後面加上"/mgc"試試!');
       })(jQuery);
     </script>
 
@@ -173,7 +174,7 @@
         $("#loading-gif").fadeIn("slow");
 
         var stn_no = $("#stn_no").val();
-        var sp = stn_no.split("/");
+        var sp = stn_no.split(/\/(.+)/);
         if ( sp.length > 1 ) stn_no = sp[0];
 
         var passwd = CryptoJS.SHA256($("#passwd").val()) + "";
@@ -197,9 +198,12 @@
 
               clear( canvas, ctx );
               if ( sp[1] == "mgc" ) {
-                rasis(ctx);
+                rasis(canvas, ctx);
                 console.log("MGC stand for Music Game Club");
                 console.log("歡迎加入成大音樂遊戲社!");
+              } else {
+                var sp2 = sp[1].split(/:(.+)/);
+                if (sp2[0] == "img") img(canvas, ctx, sp2[1]);
               }
               drawTable( canvas, ctx, arr, option);
 

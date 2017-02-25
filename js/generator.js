@@ -67,13 +67,26 @@ function getTable(stn_no, passwd, room, callback) {
   });
 }
 
-function rasis( context ) {
+function rasis( canvas, context ) {
   context.save();
   {
     context.globalAlpha = 0.3;
-    context.drawImage(document.getElementById('rasis'),0,40);
+    context.drawImage(document.getElementById('rasis'),0,40,canvas.width,canvas.height-40);
   }
   context.restore();
+}
+
+function img( canvas, context, url ) {
+  var img = new Image;
+  img.onload = function(){
+    context.save();
+    {
+      context.globalAlpha = 0.3;
+      context.drawImage(img,0,40,canvas.width,canvas.height-40);
+    }
+    context.restore();
+  };
+  img.src = url;
 }
 
 function drawTable( canvas, context, arr, option ) {
