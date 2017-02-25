@@ -22,6 +22,7 @@
     <!-- Compiled and minified JavaScript -->
     <!--Import jQuery before materialize.js-->
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
 
     <link rel="stylesheet" href="css/main.min.css" media="screen" title="no title" charset="utf-8">
@@ -97,13 +98,19 @@
       </div>
 
       <div class="row">
-        <div class="center-align">
-          <input type="checkbox" class="filled-in" id="disp-more" />
-          <label for="disp-more">顯示A~E節</label>
-        </div>
-        <div class="center-align">
-          <input type="checkbox" class="filled-in" id="disp-room" />
-          <label for="disp-room">顯示上課教室(速度較慢)</label>
+        <div id="options">
+          <div>
+            <input type="checkbox" class="filled-in" id="remember" />
+            <label for="remember">記住帳密</label>
+          </div>
+          <div>
+            <input type="checkbox" class="filled-in" id="disp-more" />
+            <label for="disp-more">顯示A~E節</label>
+          </div>
+          <div>
+            <input type="checkbox" class="filled-in" id="disp-room" />
+            <label for="disp-room">顯示上課教室(速度較慢)</label>
+          </div>
         </div>
       </div>
 
@@ -163,6 +170,9 @@
         //   select.children("option[selected]").removeAttr("selected");
         //   select.children(":nth-child(2)").addAttr("selected");
         // }
+        if(Cookies.get("stn_no")) $("#stn_no").val(Cookie.get("stn_no"));
+        if(Cookies.get("passwd")) $("#passwd").val(Cookie.get("passwd"));
+        if(Cookies.get("remember")) $("#remenber").prop("checked", Cookies.get("remember"));
         console.log('在學號後面加上"/img:url"可以為你的課表加上背景唷');
         console.log('另外也可以在學號後面加上"/mgc"試試!');
       })(jQuery);
@@ -173,6 +183,12 @@
       function generate() {
         $("#loading-gif").fadeIn("slow");
 
+        if ( $("#remenber").prop("checked") ) {
+          Cookies.set("stn_no", $("#stn_no").val());
+          Cookies.set("passwd", $("#passwd").val());
+          Cookies.set("remember", $("#remenber").prop("checked"));
+        }
+
         var stn_no = $("#stn_no").val();
         var sp = stn_no.split(/\/(.+)/);
         if ( sp.length > 1 ) stn_no = sp[0];
@@ -180,6 +196,7 @@
         var passwd = CryptoJS.SHA256($("#passwd").val()) + "";
         var room = "false";
         if ( $("#disp-room").prop("checked") ) room = "true";
+
 
         getTable(stn_no, passwd, room, function (status, arr) {
           if (status == 0) {
@@ -189,11 +206,8 @@
             if (canvas.getContext) {
               var ctx = canvas.getContext("2d");
 
-              var more = $("#disp-more").prop("checked");
               var option = {
-                width: 480,
-                height: 640,
-                more: more,
+                more: $("#disp-more").prop("checked")
               }
 
               clear( canvas, ctx );
@@ -201,7 +215,7 @@
                 rasis(canvas, ctx);
                 console.log("MGC stand for Music Game Club");
                 console.log("歡迎加入成大音樂遊戲社!");
-              } else {
+              } else if( sp[1] ) {
                 var sp2 = sp[1].split(/:(.+)/);
                 if (sp2[0] == "img") img(canvas, ctx, sp2[1]);
               }
