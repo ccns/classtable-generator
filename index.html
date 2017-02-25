@@ -97,7 +97,11 @@
       </div>
 
       <div class="row">
-        <div class="center-align" id="generate-btn">
+        <div class="center-align">
+          <input type="checkbox" class="filled-in" id="disp-more" />
+          <label for="disp-more">顯示A~E節</label>
+        </div>
+        <div class="center-align">
           <input type="checkbox" class="filled-in" id="disp-room" />
           <label for="disp-room">顯示上課教室(速度較慢)</label>
         </div>
@@ -127,7 +131,7 @@
 
       <div class="row">
         <div class="col s12 center-align" id="canvas-container" style="display:none">
-          <canvas id="table" width="480" height="640">
+          <canvas id="table">
             Your browser does not support this.
           </canvas>
           <img id="rasis" src="img/rasis.jpg" style="display:none" />
@@ -177,7 +181,6 @@
         if ( $("#disp-room").prop("checked") ) room = "true";
 
         getTable(stn_no, passwd, room, function (status, arr) {
-          // console.log(arr);
           if (status == 0) {
 
             var canvas = document.getElementById("table");
@@ -185,13 +188,20 @@
             if (canvas.getContext) {
               var ctx = canvas.getContext("2d");
 
-              clear( canvas, ctx);
+              var more = $("#disp-more").prop("checked");
+              var option = {
+                width: 480,
+                height: 640,
+                more: more,
+              }
+
+              clear( canvas, ctx );
               if ( sp[1] == "mgc" ) {
                 rasis(ctx);
                 console.log("MGC stand for Music Game Club");
                 console.log("歡迎加入成大音樂遊戲社!");
               }
-              drawTable(ctx, arr);
+              drawTable( canvas, ctx, arr, option);
 
               $("#loading-gif").hide();
               $("#canvas-container").fadeIn("slow");

@@ -15,26 +15,33 @@ var url = "https://ncku-classtable-parser.herokuapp.com/";
   });
 
   if (false) {
-    var ctx = document.getElementById("table").getContext("2d")
-    drawTable( ctx, [
+    $("#canvas-container").fadeIn("slow");
+    var canvas = document.getElementById("table");
+    var ctx = canvas.getContext("2d");
+    var option = {
+      width: 480,
+      height: 640,
+      more: true,
+    }
+    drawTable( canvas, ctx, [
       [
-        "123456第一行 第二行 第三行",
-        "123456這段有六個字",
-        "123456這段是七個字喔",
-        "123456這段文字有八個字",
-        "123456這一段文字有九個字"
+        {course_no:"AA-000", text:"123456第一行 第二行 第三行"},
+        {course_no:"AA-000", text:"123456這段有六個字"},
+        {course_no:"AA-000", text:"123456這段是七個字喔"},
+        {course_no:"AA-000", text:"123456這段文字有八個字"},
+        {course_no:"AA-000", text:"123456這一段文字有九個字"}
       ],
       [
-        "123456六的兩倍十二六的兩倍十二f",
-        "123456七的兩倍是十四七的兩倍是十四f",
-        "123456八個的兩倍是十六八個的兩倍是十六f",
-        "123456九的兩倍有足足十八九的兩倍有足足十八f",
-        "123456第一行很少 第二行超過八個字會怎樣呢 還有第三行喔"
+        {course_no:"AA-000", text:"123456六的兩倍十二六的兩倍十二f"},
+        {course_no:"AA-000", text:"123456七的兩倍是十四七的兩倍是十四f"},
+        {course_no:"AA-000", text:"123456八個的兩倍是十六八個的兩倍是十六f"},
+        {course_no:"AA-000", text:"123456九的兩倍有足足十八九的兩倍有足足十八f"},
+        {course_no:"AA-000", text:"123456第一行很少 第二行超過八個字會怎樣呢 還有第三行喔"}
       ],
       [
-        "123456第一行超過八個字會怎樣呢 第二行也超過八個子會怎樣呢"
+        {course_no:"AA-000", text: "123456第一行超過八個字會怎樣呢 第二行也超過八個子會怎樣呢"}
       ]
-    ]);
+    ], option);
     $("#loading-gif").hide();
     $("#canvas-container").fadeIn("slow");
     $("#hint").fadeIn("slow");
@@ -55,7 +62,6 @@ function getTable(stn_no, passwd, room, callback) {
       return callback(-1, arr.err);
     } else {
       arr.splice(0, 2);
-      arr.splice(10, 5);
       return callback(0, arr);
     }
   });
@@ -70,7 +76,20 @@ function rasis( context ) {
   context.restore();
 }
 
-function drawTable( context, arr ) {
+function drawTable( canvas, context, arr, option ) {
+  var week = ["一", "二", "三", "四", "五"];
+  var clas = ["1", "2", "3", "4", "N", "5", "6", "7", "8", "9"];
+  if(option.more) clas = clas.concat(["A", "B", "C", "E"]);
+  var eleWidth = option.eleWidth? option.eleHeight: 90;
+  var eleHeight = option.eleHeight? option.eleHeight: 60;
+  var headerWidth = 30;
+  var headerHeight = 40;
+  var width = eleWidth*week.length + headerWidth;
+  var height = eleHeight*clas.length + headerHeight;
+
+  canvas.width  = width;
+  canvas.height = height;
+
   // header bar
   context.save();
   {
@@ -87,17 +106,17 @@ function drawTable( context, arr ) {
   {
     context.strokeStyle = "rgba(0, 0, 0, 0.2)";
     context.fillStyle = "rgba(0, 0, 0, 0.1)";
-    context.strokeRect(0.5, 0.5, 479, 639);
+    context.strokeRect(0.5, 0.5, width-1, height-1);
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < week.length; i++) {
       context.beginPath();
-      context.moveTo(30 + i*90 + 0.5, 0);
-      context.lineTo(30 + i*90 + 0.5, 640);
+      context.moveTo(30 + i*eleWidth + 0.5, 0);
+      context.lineTo(30 + i*eleWidth + 0.5, height);
       context.stroke();
     }
 
-    for (var i = 0; i < 5; i++) {
-      context.fillRect(0, 100 + i*120, 480, 60);
+    for (var i = 0; i < clas.length/2; i++) {
+      context.fillRect(0, 40 + eleHeight + i*eleHeight*2, width, eleHeight);
     }
   }
   context.restore();
@@ -108,15 +127,13 @@ function drawTable( context, arr ) {
     context.textAlign = "center";
 
     context.fillStyle = "rgba(255, 255, 255, 0.8)";
-    var week = ["一", "二", "三", "四", "五"];
-    for (var i = 0; i < 5; i++) {
-      context.fillText(week[i], 30 + 45 + 90*i, 25);
+    for (var i = 0; i < week.length; i++) {
+      context.fillText(week[i], 30 + 45 + i*eleWidth, 25);
     }
 
     context.fillStyle = "rgba(0, 0, 0, 0.8)";
-    var clas = ["1", "2", "3", "4", "N", "5", "6", "7", "8", "9"]
-    for (var i = 0; i < 10; i++) {
-      context.fillText(clas[i], 15, 40 + 35 + i*60);
+    for (var i = 0; i < clas.length; i++) {
+      context.fillText(clas[i], 15, 40 + eleHeight/2 + 5 + i*eleHeight);
     }
   }
   context.restore();
@@ -127,7 +144,7 @@ function drawTable( context, arr ) {
     context.fillStyle = "rgba(0, 0, 0, 0.9)";
     for (var i = 0; i < arr.length; i++) {
       for (var j = 0; j < arr[i].length; j++) {
-        wrapText (context, arr[i][j], 30 + 45 + 90*j, 40 + 15 + i*60, 80, 18);
+        wrapText (context, arr[i][j], headerWidth + eleWidth/2 + j*eleWidth, headerHeight + eleHeight/4 + i*eleHeight, eleWidth-10, 18);
       }
     }
   }
