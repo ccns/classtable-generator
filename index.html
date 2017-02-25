@@ -186,7 +186,7 @@
         if ( $("#remember").prop("checked") ) {
           Cookies.set("stn_no", $("#stn_no").val());
           Cookies.set("passwd", $("#passwd").val());
-          Cookies.set("remember", true);
+          Cookies.set("remember", 1);
         } else {
           Cookies.remove("stn_no");
           Cookies.remove("passwd");
