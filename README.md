@@ -1,3 +1,3 @@
 # classtable-generator
 
-https://github.com/ccns/classtable-generator
+https://ccns.github.io/classtable-generator
