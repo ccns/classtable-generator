@@ -215,6 +215,7 @@
               }
 
               clear( canvas, ctx );
+              drawTable( canvas, ctx, arr, option);
               if ( sp[1] == "mgc" ) {
                 rasis(canvas, ctx);
                 console.log("MGC stand for Music Game Club");
@@ -223,7 +224,6 @@
                 var sp2 = sp[1].split(/:(.+)/);
                 if (sp2[0] == "img") img(canvas, ctx, sp2[1]);
               }
-              drawTable( canvas, ctx, arr, option);
 
               $("#loading-gif").hide();
               $("#canvas-container").fadeIn("slow");
