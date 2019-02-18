@@ -4,10 +4,8 @@ var url = "https://ncku-classtable-parser.herokuapp.com/";
 (function ($) {
 
   $.ajax({
-    method: "POST",
-    url: url,
-    dataType: "json",
-    data: { stu_no: "", passwd: "", room: false }
+    method: "GET",
+    url: url+"check"
   }).done(function(d) {
     $("#status").text("●").attr('color', 'green');
   }).fail(function(e) {
