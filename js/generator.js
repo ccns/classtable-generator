@@ -55,12 +55,12 @@ function getTable(stn_no, passwd, room, callback) {
     dataType: "json",
     data: { stu_no: stn_no, passwd: passwd, room: room }
   }).done(function(data) {
-    var arr = JSON.parse(data)
-    if (arr.err) {
-      return callback(-1, arr.err);
+    var data = JSON.parse(data)
+    if (data.status) {
+      return callback(data.status, data.message);
     } else {
-      arr.splice(0, 2);
-      return callback(0, arr);
+      data.table.splice(0, 2);
+      return callback(0, data.talbe);
     }
   });
 }
