@@ -60,7 +60,7 @@ function getTable(stn_no, passwd, room, callback) {
       return callback(data.status, data.message);
     } else {
       data.table.splice(0, 2);
-      return callback(0, data.talbe);
+      return callback(0, data.table);
     }
   });
 }
