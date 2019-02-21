@@ -120,24 +120,24 @@
         </div>
       </div>
 
-    </div>
-
-    <div class="container" id="classtable-field">
-
       <div class="row" id="loading-gif" style="display:none">
         <div class="col s12 center-align">
           <img src="img/spinner.gif" height="80px"/>
         </div>
       </div>
 
+    </div>
+
+    <div class="container" id="classtable-container" hidden>
+
       <div class="row">
-        <p class="col s12 center-align" id="hint" style="display:none">
+        <p class="col s12 center-align" id="hint">
           hint：「右鍵→另存影像」可下載圖片
         </p>
       </div>
 
       <div class="row">
-        <div class="col s12 center-align" id="canvas-container" style="display:none">
+        <div class="col s12 center-align" id="canvas-container">
           <canvas id="table">
             Your browser does not support this.
           </canvas>
@@ -147,6 +147,23 @@
 
     </div>
 
+    <div class="container" id="ics-container" hidden>
+
+      <div class="row">
+        <p class="col s12 center-align" id="ics-description">
+          下載 ICS 檔，可以匯入至 Google Calendar, Outlook, iCalendar 等行事曆軟體。
+        </p>
+      </div>
+
+      <div class="row">
+        <div class="center-align" id="ics-download">
+          <button class="btn waves-effect waves-light" type="button" onclick="downloadICS();">下載 ICS 檔</button>
+        </div>
+      </div>
+
+    </div>
+
+    <script src="js/ics.deps.min.js" charset="utf-8"></script>
     <script src="js/generator.js" charset="utf-8"></script>
     <script src="js/sha1.js" charset="utf-8"></script>
     <script src="js/sha256.js" charset="utf-8"></script>
@@ -180,7 +197,7 @@
 
     <!-- Function declare -->
     <script type="text/javascript">
-      function generate() {
+      async function generate() {
         $("#loading-gif").fadeIn("slow");
 
         if ( $("#remember").prop("checked") ) {
@@ -202,47 +219,52 @@
         if ( $("#disp-room").prop("checked") ) room = "true";
 
 
-        getTable(stn_no, passwd, room, function (status, arr) {
-          if (status == 0) {
+        var result = await getTable(stn_no, passwd, room);
+        window.table = result.table;
+        if (result.status == 0) {
+          var canvas = document.getElementById("table");
 
-            var canvas = document.getElementById("table");
+          if (canvas.getContext) {
+            var ctx = canvas.getContext("2d");
 
-            if (canvas.getContext) {
-              var ctx = canvas.getContext("2d");
-
-              var option = {
-                more: $("#disp-more").prop("checked")
-              }
-
-              clear( canvas, ctx );
-              drawTable( canvas, ctx, arr, option);
-              if ( sp[1] == "mgc" ) {
-                rasis(canvas, ctx);
-                console.log("MGC stand for Music Game Club");
-                console.log("歡迎加入成大音樂遊戲社!");
-              } else if( sp[1] ) {
-                var sp2 = sp[1].split(/:(.+)/);
-                if (sp2[0] == "img") img(canvas, ctx, sp2[1]);
-              }
-
-              $("#loading-gif").hide();
-              $("#canvas-container").fadeIn("slow");
-              $("#hint").fadeIn("slow");
+            var option = {
+              more: $("#disp-more").prop("checked")
             }
 
-          } else {
+            clear( canvas, ctx );
+            drawTable( canvas, ctx, result.table, option);
+            if ( sp[1] == "mgc" ) {
+              rasis(canvas, ctx);
+              console.log("MGC stand for Music Game Club");
+              console.log("歡迎加入成大音樂遊戲社!");
+            } else if( sp[1] ) {
+              var sp2 = sp[1].split(/:(.+)/);
+              if (sp2[0] == "img") img(canvas, ctx, sp2[1]);
+            }
 
-            alert(arr);
             $("#loading-gif").hide();
-
+            $("#classtable-container").fadeIn("slow");
+            $("#ics-container").fadeIn("slow");
           }
-        });
+
+          $("#download-ics").show();
+        } else {
+          alert(result.message);
+          $("#loading-gif").hide();
+        }
       }
 
       function enterHandler(e) {
         if (e.keyCode == 13) {
           generate();
         }
+      }
+
+      function downloadICS() {
+        var begin = "2019-02-18";
+        var end = "2019-06-30";
+        var ics = generateICS(window.table, begin, end);
+        ics.download("classtable");
       }
     </script>
 
@@ -254,7 +276,6 @@
 
       ga('create', 'UA-54802412-4', 'auto');
       ga('send', 'pageview');
-
     </script>
 
   </body>

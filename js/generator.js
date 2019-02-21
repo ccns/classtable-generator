@@ -48,21 +48,18 @@ var url = "https://ncku-classtable-parser.herokuapp.com/";
 
 })(jQuery);
 
-function getTable(stn_no, passwd, room, callback) {
-  $.ajax({
+async function getTable(stn_no, passwd, room) {
+  var data = await $.ajax({
     method: "POST",
     url: url,
     dataType: "json",
     data: { stu_no: stn_no, passwd: passwd, room: room }
-  }).done(function(data) {
-    var data = JSON.parse(data)
-    if (data.status) {
-      return callback(data.status, data.message);
-    } else {
-      data.table.splice(0, 2);
-      return callback(0, data.table);
-    }
-  });
+  })
+  var data = JSON.parse(data);
+  if (!data.status) {
+    data.table.splice(0, 2);
+  }
+  return data;
 }
 
 function rasis( canvas, context ) {
@@ -210,4 +207,71 @@ function wrapText (context, course, x, y, maxWidth, lineHeight) {
     y += lineHeight;
   }
 
+}
+
+function getClassPeriod( table, option = {more: false} ) {
+  var results = [];
+  var rowNum = 10;
+  var colNum = 5;
+  var currCourse = {course_no: "", text: "", week: 0, start_time: 0, end_time: 0};
+
+  if (option.more) {
+    rowNum += 4;
+  }
+
+  for (var i = 0; i < colNum; i++) {
+    for (var j = 0; j < rowNum; j++) {
+      var currClass = table[j][i];
+      if (currClass.course_no === currCourse.course_no) {
+          currCourse.end_time = j+9;
+      } else {
+        if (currCourse.course_no !== "")
+          results.push(currCourse);
+        currCourse = {
+          course_no: currClass.course_no,
+          text: currClass.text,
+          week: (i+1) % 7,
+          start_time: j+8,
+          end_time: j+9
+        }
+      }
+    }
+  }
+
+  return results
+}
+
+function getWeekday(weekday, ref) {
+  d = new Date(ref);
+  d.setHours(0, 0, 0, 0);
+  var day = d.getDay()
+  var diff = weekday - day;
+  var date = d.getDate() + (diff<0 ? 7+diff : diff)
+  return new Date(d.setDate(date));
+}
+
+function generateICS( table, begin, end=0 ) {
+  var cal = ics();
+  var classes = getClassPeriod(table);
+  var freq = "WEEKLY";
+  var byday = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+
+  var weekdate = [];
+  for (var i = 0; i < 7; i++) {
+    weekdate[i] = getWeekday(i, begin);
+  }
+
+  for (var i = 0; i < classes.length; i++) {
+    var cls = classes[i];
+    var date = new Date(weekdate[cls.week]);
+    var date_begin = new Date(date.setHours(cls.start_time));
+    var date_end = new Date(date.setHours(cls.end_time));
+    var rrule = {
+      freq: freq,
+      byday: [byday[cls.week]],
+    }
+    if (end) rrule.until = end;
+    cal.addEvent(cls.text, "("+cls.course_no+")"+cls.text, '', date_begin, date_end, rrule);
+  }
+  return cal;
 }
